@@ -43,12 +43,17 @@ func onReaction(dg *discordgo.Session, r *discordgo.MessageReaction) {
 		return
 	}
 	approveCount := 0
+	disapproveCount := 0
 	for _, mr := range m.Reactions {
 		if mr.Emoji.Name == approve {
 			approveCount += mr.Count
 		} else if mr.Emoji.Name == disapprove {
-			approveCount -= mr.Count
+			disapproveCount += mr.Count
 		}
+	}
+	if disapproveCount > 0 {
+		fmt.Println("not interesting")
+		return
 	}
 	if approveCount >= config.APPROVE_COUNT {
 		err := gitlab.MergeMessage(m.Content)

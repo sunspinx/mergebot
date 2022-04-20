@@ -33,6 +33,7 @@ func onMessage(dg *discordgo.Session, m *discordgo.MessageCreate) {
 }
 
 func sendMentionToReviewers(dg *discordgo.Session, role string, guildId string, m *discordgo.MessageCreate) {
+	reviewerCount := config.REVIEWER_COUNT
 	guild, err := dg.State.Guild(guildId)
 	if err != nil {
 		fmt.Println(err)
@@ -74,17 +75,26 @@ func sendMentionToReviewers(dg *discordgo.Session, role string, guildId string, 
 		}
 	}
 
-	//check if we have enough members online
 	var pickedMembers []string
-	if len(membersToRoll) < config.REVIEWER_COUNT {
+	//check if we have enough members online
+	if len(membersToRoll) < reviewerCount {
 		membersToRoll = append(membersToRoll, offlineMembers...)
 	}
-	//pick two members and replace message with message with mentions
-	if len(membersToRoll) < config.REVIEWER_COUNT {
+	//pick members and replace message with message with mentions
+	if len(membersToRoll) < reviewerCount {
 		fmt.Printf("Not enough members online")
 		return
 	}
-	for i := 0; i < config.REVIEWER_COUNT; i++ {
+	if len(m.Mentions) != 0 {
+		for _, v := range m.Mentions {
+			if v != nil {
+				pickedMembers = append(pickedMembers, v.ID)
+				removeFromArray(membersToRoll, v.ID)
+				reviewerCount--
+			}
+		}
+	}
+	for i := 0; i < reviewerCount; i++ {
 		var roll int
 		if len(membersToRoll)-i == 0 {
 			roll = 0
@@ -107,6 +117,15 @@ func sendMentionToReviewers(dg *discordgo.Session, role string, guildId string, 
 		return
 	}
 	fmt.Printf("%v\n", membersToRoll)
+}
+
+func removeFromArray(array []string, s string) {
+	for i, v := range array {
+		if v == s {
+			array = append(array[:i], array[i+1:]...)
+			return
+		}
+	}
 }
 
 func replaceLinkWithoutEmbed(message string) string {
