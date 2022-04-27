@@ -68,6 +68,8 @@ func onReaction(dg *discordgo.Session, r *discordgo.MessageReaction) {
 					newMessage = fmt.Sprintf("%s❌ Status: %s", oldMessage, "Cannot merge check for pipeline failures")
 				case custerror.ConflictCannotMerge:
 					newMessage = fmt.Sprintf("%s❌ Status: %s", oldMessage, "Cannot merge check for conflicts")
+				case custerror.PipelineNotOk:
+					newMessage = fmt.Sprintf("%s🍊 Status: %s", oldMessage, `¯\_(ツ)_/¯`)
 				}
 			} else {
 				newMessage = fmt.Sprintf("%s❌ Status: %s", oldMessage, err)

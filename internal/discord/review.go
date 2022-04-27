@@ -1,10 +1,13 @@
 package discord
 
 import (
+	"crypto/rand"
 	"fmt"
-	"math/rand"
+	"math/big"
+	mrand "math/rand"
 	"regexp"
 	"strings"
+	"time"
 
 	"github.com/bwmarrin/discordgo"
 	"github.com/richardbizik/mergebot/internal/config"
@@ -74,6 +77,7 @@ func sendMentionToReviewers(dg *discordgo.Session, role string, guildId string, 
 			}
 		}
 	}
+	fmt.Printf("rolling from: %v", membersToRoll)
 
 	var pickedMembers []string
 	//check if we have enough members online
@@ -96,10 +100,11 @@ func sendMentionToReviewers(dg *discordgo.Session, role string, guildId string, 
 	}
 	for i := 0; i < reviewerCount; i++ {
 		var roll int
-		if len(membersToRoll)-i == 0 {
+		if len(membersToRoll)-1 == 0 {
 			roll = 0
+			fmt.Println("roll with 0")
 		} else {
-			roll = rand.Intn(len(membersToRoll) - i)
+			roll = getRandomNumber(len(membersToRoll) - i)
 		}
 		pickedMembers = append(pickedMembers, membersToRoll[roll])
 		membersToRoll = append(membersToRoll[:roll], membersToRoll[roll+1:]...)
@@ -116,7 +121,16 @@ func sendMentionToReviewers(dg *discordgo.Session, role string, guildId string, 
 		fmt.Println(err)
 		return
 	}
-	fmt.Printf("%v\n", membersToRoll)
+	fmt.Printf("Picked: %v\n", pickedMembers)
+}
+
+func getRandomNumber(max int) int {
+	r, err := rand.Int(rand.Reader, big.NewInt(int64(max)))
+	if err != nil {
+		mrand.Seed(time.Now().Unix())
+		return mrand.Intn(max)
+	}
+	return int(r.Int64())
 }
 
 func removeFromArray(array []string, s string) {

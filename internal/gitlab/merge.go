@@ -16,16 +16,16 @@ func MergeMessage(content string) error {
 		return fmt.Errorf("Could not parse project and mergeId from message")
 	}
 
-	projectId, mergeId, merged, err := getProjectInfo(project, merge)
+	info, err := getProjectInfo(project, merge)
 	if err != nil {
 		return err
 	}
-	if merged {
+	if info.merged {
 		return nil
 	}
 
 	t := true
-	_, resp, err := gl.MergeRequests.AcceptMergeRequest(projectId, mergeId, &gitlab.AcceptMergeRequestOptions{
+	_, resp, err := gl.MergeRequests.AcceptMergeRequest(info.projectId, info.mergeId, &gitlab.AcceptMergeRequestOptions{
 		ShouldRemoveSourceBranch:  &t,
 		MergeWhenPipelineSucceeds: &t,
 	})
@@ -44,6 +44,12 @@ func MergeMessage(content string) error {
 		}
 		return err
 	}
+	if !info.pipilineOk {
+		return custerror.GitlabError{
+			Code:    custerror.PipelineNotOk,
+			Message: "Pipeline not in success state",
+		}
+	}
 	return nil
 }
 
@@ -60,9 +66,16 @@ func getMergeRequestParts(message string) (projectId string, mergeRequestId stri
 	return result["project"], result["merge"]
 }
 
-func getProjectInfo(project string, merge string) (projectId int, mergeId int, merged bool, err error) {
+type projectInfo struct {
+	projectId  int
+	mergeId    int
+	merged     bool
+	pipilineOk bool
+}
+
+func getProjectInfo(project string, merge string) (info projectInfo, err error) {
 	opts := &gitlab.GetMergeRequestsOptions{}
-	mergeId, err = strconv.Atoi(merge)
+	info.mergeId, err = strconv.Atoi(merge)
 	if err != nil {
 		fmt.Println(err)
 		err = fmt.Errorf("Wrong project id")
@@ -70,15 +83,18 @@ func getProjectInfo(project string, merge string) (projectId int, mergeId int, m
 	}
 	p := project
 	fmt.Println(p)
-	mr, _, err := gl.MergeRequests.GetMergeRequest(p, mergeId, opts)
+	mr, _, err := gl.MergeRequests.GetMergeRequest(p, info.mergeId, opts)
 	if mr.State == "merged" {
-		merged = true
+		info.merged = true
 		return
 	}
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
-	projectId = mr.ProjectID
+	info.projectId = mr.ProjectID
+	if mr.Pipeline.Status != "success" {
+		info.pipilineOk = true
+	}
 	return
 }
