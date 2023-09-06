@@ -13,7 +13,7 @@ import (
 func MergeMessage(content string) error {
 	project, merge := getMergeRequestParts(content)
 	if project == "" || merge == "" {
-		return fmt.Errorf("Could not parse project and mergeId from message")
+		return fmt.Errorf("could not parse project and mergeId from message")
 	}
 
 	info, err := getProjectInfo(project, merge)
@@ -44,7 +44,7 @@ func MergeMessage(content string) error {
 		}
 		return err
 	}
-	if !info.pipilineOk {
+	if !info.pipelineOk {
 		return custerror.GitlabError{
 			Code:    custerror.PipelineNotOk,
 			Message: "Pipeline not in success state",
@@ -70,7 +70,7 @@ type projectInfo struct {
 	projectId  int
 	mergeId    int
 	merged     bool
-	pipilineOk bool
+	pipelineOk bool
 }
 
 func getProjectInfo(project string, merge string) (info projectInfo, err error) {
@@ -78,7 +78,7 @@ func getProjectInfo(project string, merge string) (info projectInfo, err error) 
 	info.mergeId, err = strconv.Atoi(merge)
 	if err != nil {
 		fmt.Println(err)
-		err = fmt.Errorf("Wrong project id")
+		err = fmt.Errorf("wrong project id")
 		return
 	}
 	p := project
@@ -94,7 +94,7 @@ func getProjectInfo(project string, merge string) (info projectInfo, err error) 
 	}
 	info.projectId = mr.ProjectID
 	if mr.Pipeline.Status != "success" {
-		info.pipilineOk = true
+		info.pipelineOk = true
 	}
 	return
 }

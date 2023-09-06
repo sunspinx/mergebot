@@ -80,11 +80,11 @@ func sendMentionToReviewers(dg *discordgo.Session, role string, guildId string, 
 	fmt.Printf("rolling from: %v", membersToRoll)
 
 	var pickedMembers []string
-	//check if we have enough members online
+	// check if we have enough members online
 	if len(membersToRoll) < reviewerCount {
 		membersToRoll = append(membersToRoll, offlineMembers...)
 	}
-	//pick members and replace message with message with mentions
+	// pick members and replace message with mentions
 	if len(membersToRoll) < reviewerCount {
 		fmt.Printf("Not enough members online")
 		return
@@ -93,7 +93,7 @@ func sendMentionToReviewers(dg *discordgo.Session, role string, guildId string, 
 		for _, v := range m.Mentions {
 			if v != nil {
 				pickedMembers = append(pickedMembers, v.ID)
-				removeFromArray(membersToRoll, v.ID)
+				membersToRoll = removeFromArray(membersToRoll, v.ID)
 				reviewerCount--
 			}
 		}
@@ -133,13 +133,13 @@ func getRandomNumber(max int) int {
 	return int(r.Int64())
 }
 
-func removeFromArray(array []string, s string) {
+func removeFromArray(array []string, s string) []string {
 	for i, v := range array {
 		if v == s {
-			array = append(array[:i], array[i+1:]...)
-			return
+			return append(array[:i], array[i+1:]...)
 		}
 	}
+	return array
 }
 
 func replaceLinkWithoutEmbed(message string) string {
