@@ -8,7 +8,7 @@ import (
 	"github.com/richardbizik/mergebot/internal/config"
 )
 
-//Checks if message contains gitlab merge request link
+// Checks if message contains gitlab merge request link
 func isMessageOfInterest(m *discordgo.Message) bool {
 	var myExp = regexp.MustCompile(`(?P<merge_request>https?:\/\/` + config.GITLAB_HOST + `\/.*?\/merge_requests\/\d+)[\s|#]?`)
 
@@ -16,10 +16,10 @@ func isMessageOfInterest(m *discordgo.Message) bool {
 	return len(match) != 0
 }
 
-//Checks if channel is for merge requests and its category
+// Checks if channel is for merge requests and its category
 func isChannelOfInterest(channel *discordgo.Channel, category *discordgo.Channel) bool {
 	return channel.Name == config.MERGE_REQUEST_CHANNEL &&
-		constainsString(config.CATEGORIES, category.Name)
+		containsString(config.CATEGORIES, category.Name)
 }
 
 func getMessageChannelAndCategory(dg *discordgo.Session, m *discordgo.Message) (channel *discordgo.Channel, category *discordgo.Channel, err error) {
@@ -34,7 +34,7 @@ func getMessageChannelAndCategory(dg *discordgo.Session, m *discordgo.Message) (
 	return channel, category, err
 }
 
-func constainsString(arr []string, s string) bool {
+func containsString(arr []string, s string) bool {
 	for _, i := range arr {
 		if i == s {
 			return true
