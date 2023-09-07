@@ -5,8 +5,8 @@ import (
 	"regexp"
 	"strconv"
 
-	"github.com/richardbizik/mergebot/internal/config"
-	"github.com/richardbizik/mergebot/internal/custerror"
+	"github.com/sunspinx/mergebot/internal/config"
+	"github.com/sunspinx/mergebot/internal/custerror"
 	"github.com/xanzy/go-gitlab"
 )
 

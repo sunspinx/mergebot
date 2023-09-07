@@ -7,9 +7,9 @@ import (
 	"strings"
 
 	"github.com/bwmarrin/discordgo"
-	"github.com/richardbizik/mergebot/internal/config"
-	"github.com/richardbizik/mergebot/internal/custerror"
-	"github.com/richardbizik/mergebot/internal/gitlab"
+	"github.com/sunspinx/mergebot/internal/config"
+	"github.com/sunspinx/mergebot/internal/custerror"
+	"github.com/sunspinx/mergebot/internal/gitlab"
 )
 
 const (

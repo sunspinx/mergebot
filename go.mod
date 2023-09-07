@@ -1,4 +1,4 @@
-module github.com/richardbizik/mergebot
+module github.com/sunspinx/mergebot
 
 go 1.17
 

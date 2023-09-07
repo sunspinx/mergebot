@@ -10,7 +10,7 @@ import (
 	"time"
 
 	"github.com/bwmarrin/discordgo"
-	"github.com/richardbizik/mergebot/internal/config"
+	"github.com/sunspinx/mergebot/internal/config"
 )
 
 func onMessage(dg *discordgo.Session, m *discordgo.MessageCreate) {

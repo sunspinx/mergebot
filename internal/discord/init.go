@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/bwmarrin/discordgo"
-	"github.com/richardbizik/mergebot/internal/config"
+	"github.com/sunspinx/mergebot/internal/config"
 )
 
 var dg *discordgo.Session

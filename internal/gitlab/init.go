@@ -3,7 +3,7 @@ package gitlab
 import (
 	"fmt"
 
-	"github.com/richardbizik/mergebot/internal/config"
+	"github.com/sunspinx/mergebot/internal/config"
 	"github.com/xanzy/go-gitlab"
 )
 
