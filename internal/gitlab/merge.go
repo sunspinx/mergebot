@@ -84,12 +84,12 @@ func getProjectInfo(project string, merge string) (info projectInfo, err error) 
 	p := project
 	fmt.Println(p)
 	mr, _, err := gl.MergeRequests.GetMergeRequest(p, info.mergeId, opts)
-	if mr.State == "merged" {
-		info.merged = true
-		return
-	}
 	if err != nil {
 		fmt.Println(err)
+		return
+	}
+	if mr.State == "merged" {
+		info.merged = true
 		return
 	}
 	info.projectId = mr.ProjectID
