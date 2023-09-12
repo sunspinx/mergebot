@@ -1,4 +1,4 @@
-FROM golang:1.20-buster as build
+FROM docker.io/library/golang:1.20-buster as build
 
 WORKDIR /app
 

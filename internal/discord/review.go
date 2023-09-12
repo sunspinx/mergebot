@@ -27,7 +27,6 @@ func onMessage(dg *discordgo.Session, m *discordgo.MessageCreate) {
 		fmt.Println(err)
 		return
 	}
-	fmt.Println(channel.Name, category.Name)
 
 	if !isChannelOfInterest(channel, category) {
 		return
@@ -77,7 +76,6 @@ func sendMentionToReviewers(dg *discordgo.Session, role string, guildId string, 
 			}
 		}
 	}
-	fmt.Printf("rolling from: %v", membersToRoll)
 
 	var pickedMembers []string
 	// check if we have enough members online
@@ -125,7 +123,6 @@ func sendMentionToReviewers(dg *discordgo.Session, role string, guildId string, 
 		fmt.Println(err)
 		return
 	}
-	fmt.Printf("Picked: %v\n", pickedMembers)
 }
 
 func getRandomNumber(max int) int {
