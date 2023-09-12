@@ -93,7 +93,7 @@ func getProjectInfo(project string, merge string) (info projectInfo, err error) 
 		return
 	}
 	info.projectId = mr.ProjectID
-	if mr.Pipeline.Status != "success" {
+	if mr.Pipeline != nil && mr.Pipeline.Status != "success" {
 		info.pipelineOk = true
 	}
 	return

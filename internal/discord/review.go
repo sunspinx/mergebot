@@ -114,7 +114,11 @@ func sendMentionToReviewers(dg *discordgo.Session, role string, guildId string, 
 	for _, pick := range pickedMembers {
 		newMessage += fmt.Sprintf(" <@!%s>", pick)
 	}
-	dg.ChannelMessageDelete(m.ChannelID, m.ID)
+	err = dg.ChannelMessageDelete(m.ChannelID, m.ID)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
 	newMessage = replaceLinkWithoutEmbed(newMessage)
 	_, err = dg.ChannelMessageSend(m.ChannelID, newMessage)
 	if err != nil {
